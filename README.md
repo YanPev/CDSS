@@ -75,3 +75,14 @@ The app includes 4 tabs:
 | **7. Information Delivery** | Visual tabular views, time filtering, code lookup.                   |
 
 ---
+
+## Dependencies
+
+To run this project, you must have R installed with the following R packages:
+
+```r
+install.packages(c(
+  "shiny", "readxl", "readr", "dplyr", "DT", 
+  "RSQLite", "lubridate", "shinyTime"
+))
+```
