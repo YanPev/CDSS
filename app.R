@@ -5,6 +5,7 @@ library(dplyr)
 library(DT)
 library(RSQLite)
 library(lubridate)
+library(shinyTime)
 
 # Connect to SQLite DB
 if (!file.exists("patient_db.sqlite")) {
