@@ -8,27 +8,27 @@ _Last updated: 2025-05-14 06:35_
 ## Architecture Overview
 
 ```
-             ┌─────────────────────────────┐
-             │        User Interface       │
-             │  SelectizeInput, TimeInput  │
-             └────────────┬────────────────┘
+            ┌─────────────────────────────┐
+            │        User Interface       │
+            │  SelectizeInput, TimeInput  │
+            └─────────────┬───────────────┘
                           │
-               Receives user input
+                 Receives user input
                           │
              ┌────────────▼────────────┐
              │        Shiny Server     │
-             │ Query / Update / Delete│
+             │ Query / Update / Delete │
              └────────────┬────────────┘
                           │
-         Uses secure SQL with parameters
+               Uses SQL with parameters
                           │
              ┌────────────▼────────────┐
              │     SQLite Database     │
              │       project_db        │
              └────────────┬────────────┘
                           │
-            ← ← ← ← ← ← ← ▼ ← ← ← ← ← ← ←
-      Excel (project_db.xlsx) + Loinc.csv
+                          ▼ 
+         Excel (project_db.xlsx) + Loinc.csv
 ```
 
 ---
