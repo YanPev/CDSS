@@ -1,8 +1,6 @@
 
 # CDSS Mini Project – Architecture and User Guide
 
-_Last updated: 2025-05-14 06:35_
-
 ---
 
 ## Architecture Overview
