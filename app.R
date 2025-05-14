@@ -36,7 +36,7 @@ con <- dbConnect(SQLite(), "patient_db.sqlite")
 
 ui <- fluidPage(
   tags$head(tags$style(HTML("body { background-color: pink; }"))),
-  titlePanel("CDSS System - SQL Edition"),
+  titlePanel("CDSS System"),
   tabsetPanel(
     tabPanel("View History",
              fluidRow(
