@@ -15,12 +15,14 @@ if (!file.exists("patient_db.sqlite")) {
       value = Value,
       unit = Unit,
       datetime = `Valid start time`,
+      datetime1 = `Transaction time`, 
       name = `First name`,
       lastname = `Last name`
     ) %>%
     mutate(
       fullname = paste(name, lastname),
-      datetime = as.numeric(as.POSIXct(datetime))  # store as UNIX timestamp
+      datetime = as.numeric(as.POSIXct(datetime)),
+      datetime1 = as.numeric(as.POSIXct(datetime1))
     )
 
   con <- dbConnect(SQLite(), "patient_db.sqlite")
@@ -124,7 +126,15 @@ server <- function(input, output, session) {
 
       df <- dbGetQuery(con, query, params = params)
       df$loinc_name <- loinc_dict$loinc_name[match(df$loinc, loinc_dict$loinc)]
-      df <- df %>% mutate(datetime = readable_time) %>% select(-readable_time)
+      df <- df %>%
+        mutate(
+          `Valid start time` = format(as.POSIXct(datetime, origin = "1970-01-01", tz = "UTC"), "%Y-%m-%d %H:%M:%S"),
+          `Transaction time` = format(as.POSIXct(datetime1, origin = "1970-01-01", tz = "UTC"), "%Y-%m-%d %H:%M:%S")
+        ) %>%
+        relocate(loinc_name, .after = loinc) %>%
+        relocate(`Valid start time`, .after = unit) %>%
+        relocate(`Transaction time`, .after = `Valid start time`) %>%
+        select(-datetime, -datetime1, -readable_time, -fullname)  # remove raw UNIX columns
 
       output$history_table <- renderDataTable({
         if (nrow(df) == 0) {
@@ -149,8 +159,8 @@ server <- function(input, output, session) {
       output$update_result <- renderPrint("No matching measurement found to update")
     } else {
       last_row <- df[which.max(df$datetime), ]
-      dbExecute(con, "UPDATE project_db SET value = ? WHERE rowid = ?",
-                params = list(input$new_value, last_row$rowid))
+      dbExecute(con, "UPDATE project_db SET value = ?, datetime = ?, datetime1 = ? WHERE rowid = ?",
+          params = list(input$new_value, dt_target, as.numeric(Sys.time()), last_row$rowid))
       output$update_result <- renderPrint(sprintf("Value successfully updated to %f", input$new_value))
     }
   })
